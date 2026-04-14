@@ -22,7 +22,7 @@ const BookingList = ({
 
   // Filter bookings based on current user role
   const getFilteredBookings = () => {
-    let filtered = bookings;
+    let filtered = bookings || [];
 
     // If student, only show their bookings
     if (userRole === 'student') {
@@ -45,17 +45,18 @@ const BookingList = ({
     // Apply search
     if (searchTerm) {
       filtered = filtered.filter(booking => 
-        booking.resourceName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        booking.purpose.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        booking.userName.toLowerCase().includes(searchTerm.toLowerCase())
+        (booking.resourceName && booking.resourceName.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (booking.purpose && booking.purpose.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (booking.userName && booking.userName.toLowerCase().includes(searchTerm.toLowerCase()))
       );
     }
 
     // Sort by date and time (newest first)
     filtered.sort((a, b) => {
+      if (!a.date || !b.date) return 0;
       const dateCompare = new Date(b.date) - new Date(a.date);
       if (dateCompare !== 0) return dateCompare;
-      return b.startTime.localeCompare(a.startTime);
+      return (b.startTime || '').localeCompare(a.startTime || '');
     });
 
     return filtered;

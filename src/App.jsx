@@ -129,6 +129,7 @@ const App = () => {
         }
         return (
           <AdminPanel
+            bookings={bookings}
             onUpdateStatus={handleStatusUpdate}
             onCancelBooking={handleCancelBooking}
           />

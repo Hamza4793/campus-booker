@@ -2,11 +2,26 @@ import React, { useState } from 'react';
 import PendingBookings from './PendingBookings';
 import BookingList from '../bookings/BookingList';
 import Button from '../ui/Button';
-import { useBookings } from '../../hooks/useBookings';
 
-const AdminPanel = ({ onUpdateStatus, onCancelBooking }) => {
+const AdminPanel = ({ bookings, onUpdateStatus, onCancelBooking }) => {
   const [activeTab, setActiveTab] = useState('pending');
-  const { getBookingStats } = useBookings();
+  
+  // Calculate stats from bookings prop
+  const getBookingStats = () => {
+    const total = bookings.length;
+    const pending = bookings.filter(b => b.status === 'pending').length;
+    const approved = bookings.filter(b => b.status === 'approved').length;
+    const rejected = bookings.filter(b => b.status === 'rejected').length;
+
+    return {
+      total,
+      pending,
+      approved,
+      rejected,
+      approvalRate: total > 0 ? ((approved / total) * 100).toFixed(1) : 0
+    };
+  };
+  
   const stats = getBookingStats();
 
   const tabs = [
@@ -41,6 +56,7 @@ const AdminPanel = ({ onUpdateStatus, onCancelBooking }) => {
       <div className="admin-content">
         {activeTab === 'pending' && (
           <PendingBookings 
+            bookings={bookings}
             onUpdateStatus={onUpdateStatus}
             onCancelBooking={onCancelBooking}
           />
@@ -48,6 +64,7 @@ const AdminPanel = ({ onUpdateStatus, onCancelBooking }) => {
         
         {activeTab === 'all' && (
           <BookingList
+            bookings={bookings}
             userRole="admin"
             onUpdateStatus={onUpdateStatus}
             onCancelBooking={onCancelBooking}

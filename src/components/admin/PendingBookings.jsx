@@ -1,13 +1,11 @@
 import React from 'react';
 import BookingCard from '../bookings/BookingCard';
-import { useBookings } from '../../hooks/useBookings';
 import { BOOKING_STATUS } from '../../constants';
 
-const PendingBookings = ({ onUpdateStatus, onCancelBooking }) => {
-  const { bookings, loading } = useBookings();
+const PendingBookings = ({ bookings, onUpdateStatus, onCancelBooking, loading = false }) => {
   
   // Get only pending bookings
-  const pendingBookings = bookings.filter(booking => 
+  const pendingBookings = (bookings || []).filter(booking => 
     booking.status === BOOKING_STATUS.PENDING
   );
 
