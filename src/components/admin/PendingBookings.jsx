@@ -5,12 +5,12 @@ import { BOOKING_STATUS } from '../../constants';
 const PendingBookings = ({ bookings, onUpdateStatus, onCancelBooking, loading = false }) => {
   
   // Get only pending bookings
-  const pendingBookings = (bookings || []).filter(booking => 
-    booking.status === BOOKING_STATUS.PENDING
-  );
+  const pendingBookings = Array.isArray(bookings) 
+    ? bookings.filter(booking => booking.status === BOOKING_STATUS.PENDING)
+    : [];
 
   // Sort by creation date (oldest first)
-  pendingBookings.sort((a, b) => 
+  const sortedPendingBookings = [...pendingBookings].sort((a, b) => 
     new Date(a.createdAt) - new Date(b.createdAt)
   );
 
@@ -37,18 +37,18 @@ const PendingBookings = ({ bookings, onUpdateStatus, onCancelBooking, loading = 
         <h3>Pending Bookings</h3>
         <p>Review and approve or reject booking requests</p>
         <div className="pending-count">
-          {pendingBookings.length} booking{pendingBookings.length !== 1 ? 's' : ''} awaiting approval
+          {sortedPendingBookings.length} booking{sortedPendingBookings.length !== 1 ? 's' : ''} awaiting approval
         </div>
       </div>
 
       <div className="pending-bookings-grid">
-        {pendingBookings.map(booking => (
+        {sortedPendingBookings.map(booking => (
           <div key={booking.id} className="pending-booking-item">
             <BookingCard
               booking={booking}
               userRole="admin"
-              onUpdateStatus={onUpdateStatus}
-              onCancelBooking={onCancelBooking}
+              onUpdateStatus={(status, reason) => onUpdateStatus(booking.id, status, reason)}
+              onCancel={() => onCancelBooking(booking.id)}
             />
           </div>
         ))}
@@ -61,24 +61,21 @@ const PendingBookings = ({ bookings, onUpdateStatus, onCancelBooking, loading = 
             className="btn btn-success"
             onClick={() => {
               // Approve all pending bookings
-              pendingBookings.forEach(booking => {
+              sortedPendingBookings.forEach(booking => {
                 onUpdateStatus(booking.id, BOOKING_STATUS.APPROVED);
               });
             }}
           >
-            Approve All ({pendingBookings.length})
+            Approve All ({sortedPendingBookings.length})
           </button>
           
           <button 
             className="btn btn-danger"
             onClick={() => {
-              // Reject all pending bookings with a reason
-              const reason = prompt('Please provide a reason for rejecting all pending bookings:');
-              if (reason) {
-                pendingBookings.forEach(booking => {
-                  onUpdateStatus(booking.id, BOOKING_STATUS.REJECTED, reason);
-                });
-              }
+              // Reject all pending bookings
+              sortedPendingBookings.forEach(booking => {
+                onUpdateStatus(booking.id, BOOKING_STATUS.REJECTED);
+              });
             }}
           >
             Reject All

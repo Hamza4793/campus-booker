@@ -1,5 +1,11 @@
 import { BOOKING_STATUS, USER_ROLES } from '../constants';
 
+const getFutureDate = (daysAhead) => {
+  const date = new Date();
+  date.setDate(date.getDate() + daysAhead);
+  return date.toISOString().split('T')[0];
+};
+
 // Demo bookings for testing
 export const demoBookings = [
   {
@@ -8,13 +14,13 @@ export const demoBookings = [
     resourceName: 'Computer Lab 101',
     userId: 'student001',
     userName: 'John Doe',
-    date: '2024-01-15',
+    date: getFutureDate(1),
     startTime: '10:00',
     endTime: '12:00',
     purpose: 'Programming practice session',
     status: BOOKING_STATUS.APPROVED,
-    createdAt: '2024-01-10T09:00:00Z',
-    approvedAt: '2024-01-10T10:30:00Z',
+    createdAt: new Date().toISOString(),
+    approvedAt: new Date().toISOString(),
     approvedBy: 'admin001'
   },
   {
@@ -23,12 +29,12 @@ export const demoBookings = [
     resourceName: 'Central Library',
     userId: 'student002',
     userName: 'Jane Smith',
-    date: '2024-01-16',
+    date: getFutureDate(2),
     startTime: '14:00',
     endTime: '16:00',
     purpose: 'Study session for exams',
     status: BOOKING_STATUS.PENDING,
-    createdAt: '2024-01-11T11:00:00Z'
+    createdAt: new Date().toISOString()
   },
   {
     id: 3,
@@ -36,13 +42,13 @@ export const demoBookings = [
     resourceName: 'Main Auditorium',
     userId: 'student003',
     userName: 'Mike Johnson',
-    date: '2024-01-17',
+    date: getFutureDate(3),
     startTime: '09:00',
     endTime: '11:00',
     purpose: 'Club presentation',
     status: BOOKING_STATUS.REJECTED,
-    createdAt: '2024-01-12T13:00:00Z',
-    rejectedAt: '2024-01-12T15:00:00Z',
+    createdAt: new Date().toISOString(),
+    rejectedAt: new Date().toISOString(),
     rejectedBy: 'admin001',
     rejectionReason: 'Auditorium already booked for official event'
   },
@@ -52,13 +58,13 @@ export const demoBookings = [
     resourceName: 'Indoor Sports Hall',
     userId: 'student004',
     userName: 'Sarah Wilson',
-    date: '2024-01-18',
+    date: getFutureDate(4),
     startTime: '16:00',
     endTime: '18:00',
     purpose: 'Basketball practice',
     status: BOOKING_STATUS.APPROVED,
-    createdAt: '2024-01-13T10:00:00Z',
-    approvedAt: '2024-01-13T11:30:00Z',
+    createdAt: new Date().toISOString(),
+    approvedAt: new Date().toISOString(),
     approvedBy: 'admin001'
   }
 ];

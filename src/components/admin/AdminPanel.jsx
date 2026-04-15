@@ -66,6 +66,7 @@ const AdminPanel = ({ bookings, onUpdateStatus, onCancelBooking }) => {
           <BookingList
             bookings={bookings}
             userRole="admin"
+            loading={false}
             onUpdateStatus={onUpdateStatus}
             onCancelBooking={onCancelBooking}
           />

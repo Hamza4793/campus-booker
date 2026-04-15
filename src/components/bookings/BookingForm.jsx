@@ -6,7 +6,7 @@ import { TIME_SLOTS } from '../../constants';
 import { getTodayDate, getMaxBookingDate } from '../../utils/dateUtils';
 import { validateBookingForm } from '../../utils/validation';
 
-const BookingForm = ({ selectedResource, availableSlots, onSubmit, onCancel, loading }) => {
+const BookingForm = ({ selectedResource, availableSlots, bookings, onSubmit, onCancel, loading }) => {
   const [formData, setFormData] = useState({
     resourceId: '',
     resourceName: '',
@@ -15,7 +15,7 @@ const BookingForm = ({ selectedResource, availableSlots, onSubmit, onCancel, loa
     endTime: '',
     purpose: '',
     userId: 'student001', // Demo user ID
-    userName: 'John Doe'  // Demo user name
+    userName: ''  // User will enter their name
   });
   
   const [errors, setErrors] = useState({});
@@ -34,13 +34,13 @@ const BookingForm = ({ selectedResource, availableSlots, onSubmit, onCancel, loa
 
   // Update available time slots when date changes
   useEffect(() => {
-    if (formData.date && availableSlots) {
-      const slots = availableSlots(formData.resourceId, formData.date);
+    if (formData.date && availableSlots && bookings) {
+      const slots = availableSlots(formData.resourceId, formData.date, TIME_SLOTS);
       setFilteredTimeSlots(slots);
     } else {
       setFilteredTimeSlots(TIME_SLOTS);
     }
-  }, [formData.date, formData.resourceId, availableSlots]);
+  }, [formData.date, formData.resourceId, availableSlots, bookings]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -80,7 +80,7 @@ const BookingForm = ({ selectedResource, availableSlots, onSubmit, onCancel, loa
       endTime: '',
       purpose: '',
       userId: 'student001',
-      userName: 'John Doe'
+      userName: ''
     });
     setErrors({});
   };
@@ -105,6 +105,16 @@ const BookingForm = ({ selectedResource, availableSlots, onSubmit, onCancel, loa
           value={formData.resourceName}
           disabled
           helperText="Selected resource"
+        />
+        
+        <Input
+          label="Your Name"
+          name="userName"
+          value={formData.userName}
+          onChange={handleInputChange}
+          error={errors.userName}
+          placeholder="Enter your full name"
+          required
         />
         
         <Input
@@ -185,7 +195,7 @@ const BookingForm = ({ selectedResource, availableSlots, onSubmit, onCancel, loa
               type="submit"
               variant="primary"
               loading={loading}
-              disabled={!formData.date || !formData.startTime || !formData.endTime || !formData.purpose}
+              disabled={!formData.date || !formData.startTime || !formData.endTime || !formData.purpose || !formData.userName}
             >
               Submit Booking
             </Button>

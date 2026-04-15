@@ -7,6 +7,13 @@ import { VALIDATION_MESSAGES } from '../constants';
  */
 export const validateBookingForm = (formData) => {
   const errors = {};
+
+  // User name validation
+  if (!formData.userName || formData.userName.trim() === '') {
+    errors.userName = VALIDATION_MESSAGES.REQUIRED;
+  } else if (formData.userName.trim().length < 2) {
+    errors.userName = 'Name must be at least 2 characters long';
+  }
   
   // Resource ID validation
   if (!formData.resourceId) {

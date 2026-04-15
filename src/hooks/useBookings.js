@@ -1,14 +1,20 @@
 import { useState, useEffect } from 'react';
 import { useLocalStorage } from './useLocalStorage';
-import { checkBookingClash, getAvailableTimeSlots } from '../utils/clashDetection';
+import { 
+  checkBookingClash, 
+  getAvailableTimeSlots, 
+  validateBookingTime 
+} from '../utils/clashDetection';
 import { validateBookingForm } from '../utils/validation';
+import { TIME_SLOTS } from '../constants';
+import { demoBookings } from '../data/demoData';
 
 /**
  * Custom hook for managing bookings
  * @returns {Object} - Bookings state and management functions
  */
 export const useBookings = () => {
-  const [bookings, setBookings] = useLocalStorage('campus_booker_bookings', []);
+  const [bookings, setBookings] = useLocalStorage('campus_booker_bookings', demoBookings);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -198,11 +204,10 @@ export const useBookings = () => {
    * Get available time slots for a resource on a specific date
    * @param {number} resourceId - Resource ID
    * @param {string} date - Date string
-   * @param {Array} timeSlots - Available time slots
    * @returns {Array} - Available time slots
    */
-  const getAvailableSlots = (resourceId, date, timeSlots) => {
-    return getAvailableTimeSlots(resourceId, date, bookings, timeSlots);
+  const getAvailableSlots = (resourceId, date) => {
+    return getAvailableTimeSlots(resourceId, date, bookings, TIME_SLOTS);
   };
 
   /**

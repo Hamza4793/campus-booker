@@ -23,7 +23,7 @@ const BookingCard = ({
   const handleStatusUpdate = async (status, reason = null) => {
     setLoading(true);
     try {
-      await onUpdateStatus(booking.id, status, reason);
+      await onUpdateStatus(status, reason);
       setShowRejectForm(false);
       setRejectionReason('');
     } finally {
@@ -58,7 +58,7 @@ const BookingCard = ({
             <Button
               variant="danger"
               size="small"
-              onClick={() => onCancel(booking.id)}
+              onClick={onCancel}
               loading={loading}
             >
               Cancel

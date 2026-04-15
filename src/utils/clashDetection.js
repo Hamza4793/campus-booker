@@ -37,7 +37,7 @@ export const checkBookingClash = (newBooking, existingBookings) => {
   const sameResourceBookings = existingBookings.filter(booking => 
     booking.resourceId === resourceId && 
     booking.date === date &&
-    booking.status === BOOKING_STATUS.APPROVED // Only check against approved bookings
+    booking.status !== BOOKING_STATUS.REJECTED
   );
 
   // Check for time clashes

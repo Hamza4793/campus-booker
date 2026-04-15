@@ -98,6 +98,7 @@ const App = () => {
                 <BookingForm
                   selectedResource={selectedResource}
                   availableSlots={getAvailableSlots}
+                  bookings={bookings}
                   onSubmit={handleBookingSubmit}
                   onCancel={() => setSelectedResource(null)}
                   loading={loading}

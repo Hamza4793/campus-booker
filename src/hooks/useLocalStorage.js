@@ -17,8 +17,11 @@ export const useLocalStorage = (key, initialValue) => {
       const item = window.localStorage.getItem(key);
       if (!item) return initialValue;
       const parsed = JSON.parse(item);
-      // Ensure we return an array for bookings
-      return Array.isArray(parsed) ? parsed : initialValue;
+      // Ensure we return the correct type
+      if (key === 'campus_booker_bookings') {
+        return Array.isArray(parsed) ? parsed : initialValue;
+      }
+      return parsed;
     } catch (error) {
       console.error(`Error reading localStorage key "${key}":`, error);
       return initialValue;
@@ -31,10 +34,12 @@ export const useLocalStorage = (key, initialValue) => {
       // Allow value to be a function so we have the same API as useState
       const valueToStore = value instanceof Function ? value(storedValue) : value;
       
-      setStoredValue(valueToStore);
+      // Ensure we're storing the correct type
+      const finalValue = Array.isArray(valueToStore) ? [...valueToStore] : valueToStore;
+      setStoredValue(finalValue);
       
       if (typeof window !== 'undefined') {
-        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+        window.localStorage.setItem(key, JSON.stringify(finalValue));
       }
     } catch (error) {
       console.error(`Error setting localStorage key "${key}":`, error);
