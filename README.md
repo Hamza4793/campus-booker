@@ -1,247 +1,228 @@
-# CampusBooker - Campus Facility Booking System
+# CampusBooker
 
-A React-based web application that allows students to book campus facilities with clash detection and admin approval system.
+CampusBooker is a React-based campus facility booking web app built for students and admins. It lets users browse campus resources, request bookings, detect time-slot clashes, review booking history, and manage approvals using browser `localStorage`.
+
+## Overview
+
+This project is frontend only. There is no backend or database server. All booking and role data is stored in the browser, which makes the app simple to run and suitable for academic demos, mini-projects, and viva presentations.
+
+### Student flow
+- Browse available labs, libraries, auditoriums, and sports halls
+- Select a resource and submit a booking request
+- Enter name, date, time, and purpose
+- Avoid overlapping bookings through clash detection
+- View personal bookings and cancel pending requests
+
+### Admin flow
+- Switch role from student to admin
+- Review pending booking requests
+- Approve or reject requests
+- View all bookings with filters
+- Track booking statistics
 
 ## Features
 
-### Student Features
-- 🏫 Browse available campus facilities (labs, libraries, auditoriums, sports halls)
-- 📅 Book time slots for resources
-- 🚫 Automatic clash detection to prevent double bookings
-- 📋 View personal booking history
-- ✏️ Cancel pending bookings
+- Resource listing with grouped facility cards
+- Booking form with validation
+- Student name input during booking
+- Clash detection for overlapping time slots
+- Booking status flow: `pending`, `approved`, `rejected`
+- Admin approval and rejection panel
+- Booking filters by resource, date, and status
+- Demo data for quick testing
+- Persistent data using `localStorage`
+- Responsive UI for desktop and mobile
 
-### Admin Features
-- 👑 Admin role toggle functionality
-- ✅ Approve or reject booking requests
-- 📊 View booking statistics
-- 🔍 Filter and search all bookings
-- 📈 Track approval rates
+## Tech Stack
 
-### Technical Features
-- 💾 LocalStorage data persistence
-- 🎨 Modern responsive UI design
-- ⚡ Real-time clash detection
-- 🔧 Form validation and error handling
-- 📱 Mobile-friendly interface
+- React 18
+- React Scripts 5
+- CSS
+- Browser `localStorage`
 
 ## Project Structure
 
-```
-campus-booker/
-├── public/
-│   └── index.html
-├── src/
-│   ├── components/
-│   │   ├── common/
-│   │   │   ├── Header.jsx
-│   │   │   ├── Layout.jsx
-│   │   │   └── Card.jsx
-│   │   ├── resources/
-│   │   │   ├── ResourceList.jsx
-│   │   │   └── ResourceCard.jsx
-│   │   ├── bookings/
-│   │   │   ├── BookingForm.jsx
-│   │   │   ├── BookingList.jsx
-│   │   │   └── BookingCard.jsx
-│   │   ├── admin/
-│   │   │   ├── AdminPanel.jsx
-│   │   │   └── PendingBookings.jsx
-│   │   └── ui/
-│   │       ├── Button.jsx
-│   │       ├── Input.jsx
-│   │       └── Select.jsx
-│   ├── data/
-│   │   ├── resources.js
-│   │   └── demoData.js
-│   ├── hooks/
-│   │   ├── useLocalStorage.js
-│   │   └── useBookings.js
-│   ├── utils/
-│   │   ├── clashDetection.js
-│   │   ├── validation.js
-│   │   └── dateUtils.js
-│   ├── styles/
-│   │   ├── globals.css
-│   │   └── components.css
-│   ├── App.jsx
-│   ├── index.js
-│   └── constants.js
-├── package.json
-└── README.md
+```text
+src/
+  components/
+    admin/
+      AdminPanel.jsx
+      PendingBookings.jsx
+    bookings/
+      BookingCard.jsx
+      BookingForm.jsx
+      BookingList.jsx
+    common/
+      Header.jsx
+      Layout.jsx
+      Card.jsx
+    resources/
+      ResourceCard.jsx
+      ResourceList.jsx
+    ui/
+      Button.jsx
+      Input.jsx
+      Select.jsx
+  data/
+    demoData.js
+    resources.js
+  hooks/
+    useBookings.js
+    useLocalStorage.js
+  styles/
+    components.css
+    globals.css
+  utils/
+    clashDetection.js
+    dateUtils.js
+    validation.js
+  App.jsx
+  constants.js
+  index.js
 ```
 
-## Installation & Setup
+## Getting Started
 
 ### Prerequisites
-- Node.js (version 14 or higher)
-- npm or yarn
 
-### Steps
+- Node.js 14+
+- npm
 
-1. **Install dependencies**
-   ```bash
-   npm install
-   ```
+### Run locally
 
-2. **Start the development server**
-   ```bash
-   npm start
-   ```
-
-3. **Open your browser**
-   Navigate to `http://localhost:3000`
-
-## How to Use
-
-### For Students
-
-1. **Browse Resources**: View available facilities organized by type
-2. **Select Resource**: Click on any resource to see details and availability
-3. **Make Booking**: Fill out the booking form with date, time, and purpose
-4. **View Bookings**: Track your booking status in "My Bookings"
-5. **Cancel Bookings**: Cancel pending bookings if needed
-
-### For Admins
-
-1. **Switch Role**: Click "Switch to Admin" in the header
-2. **Review Pending**: Check pending bookings in Admin Panel
-3. **Approve/Reject**: Process booking requests with optional rejection reason
-4. **View Statistics**: Monitor booking trends and approval rates
-5. **Manage All Bookings**: Filter and search through all system bookings
-
-## Key Concepts Explained
-
-### Clash Detection Logic
-
-The clash detection system prevents double bookings by:
-
-1. **Time Range Overlap Check**: Compares new booking time with existing approved bookings
-2. **Resource-Specific**: Only checks conflicts for the same resource
-3. **Date-Specific**: Only checks conflicts for the same date
-4. **Status-Based**: Only considers approved bookings for conflict detection
-
-```javascript
-// Core clash detection algorithm
-const doTimeRangesOverlap = (start1, end1, start2, end2) => {
-  const start1Minutes = timeToMinutes(start1);
-  const end1Minutes = timeToMinutes(end1);
-  const start2Minutes = timeToMinutes(start2);
-  const end2Minutes = timeToMinutes(end2);
-  
-  return (start1Minutes < end2Minutes) && (start2Minutes < end1Minutes);
-};
+```bash
+npm install
+npm start
 ```
 
-### Data Persistence
+Then open:
 
-The application uses localStorage for data persistence:
-
-- **Bookings**: All booking data stored in `campus_booker_bookings`
-- **User Role**: Current role stored in `campus_booker_user_role`
-- **Auto-sync**: Changes sync across browser tabs automatically
-
-### Form Validation
-
-Comprehensive validation includes:
-
-- **Required Fields**: All mandatory fields must be filled
-- **Date Validation**: Cannot book past dates
-- **Time Validation**: End time must be after start time
-- **Operating Hours**: Bookings must be within facility hours
-- **Purpose Length**: Purpose must be 10-200 characters
-
-## Important Viva Topics
-
-### Technical Implementation
-1. **React Hooks**: Custom hooks for localStorage and booking management
-2. **State Management**: Component state vs localStorage persistence
-3. **Event Handling**: Form submissions and user interactions
-4. **Conditional Rendering**: Role-based UI components
-5. **Responsive Design**: Mobile-first CSS Grid and Flexbox
-
-### Algorithm & Logic
-1. **Clash Detection**: Time overlap algorithm explanation
-2. **Validation Logic**: Multi-layer form validation approach
-3. **Data Filtering**: Client-side filtering and search implementation
-4. **Role-Based Access**: Permission system design
-
-### User Experience
-1. **Error Handling**: User-friendly error messages
-2. **Loading States**: Visual feedback during operations
-3. **Notifications**: Success/error notification system
-4. **Empty States**: Helpful messages when no data exists
-
-## Browser Compatibility
-
-- Chrome 90+
-- Firefox 88+
-- Safari 14+
-- Edge 90+
-
-## Development Notes
-
-### Adding New Resources
-Edit `src/data/resources.js` to add new facilities:
-
-```javascript
-{
-  id: 9,
-  name: 'New Facility',
-  type: RESOURCE_TYPES.LAB,
-  capacity: 40,
-  description: 'Description here',
-  equipment: ['Equipment list'],
-  location: 'Building location',
-  available: true,
-  operatingHours: {
-    start: '08:00',
-    end: '18:00'
-  }
-}
+```text
+http://localhost:3000
 ```
 
-### Customizing Time Slots
-Modify `TIME_SLOTS` in `src/constants.js` to change available booking times.
+If port `3000` is already busy, React may offer another port such as `3001`.
 
-### Styling Changes
-All styles are in `src/styles/` directory with modular CSS architecture.
+### Production build
 
-## Troubleshooting
+```bash
+npm run build
+```
 
-### Common Issues
+## How It Works
 
-1. **Bookings not saving**: Check browser localStorage permissions
-2. **Clash detection not working**: Verify time format is HH:MM
-3. **Admin access denied**: Ensure role toggle is working
-4. **Styles not loading**: Check CSS import paths
+### 1. Resource module
 
-### Debug Mode
-Open browser console to see detailed error messages and debug information.
+Resources are defined in [src/data/resources.js](/Users/cil/CascadeProjects/2048/src/data/resources.js). Each resource contains:
 
-## Future Enhancements
+- name
+- type
+- capacity
+- location
+- equipment
+- operating hours
 
-- [ ] User authentication system
-- [ ] Email notifications for booking updates
-- [ ] Recurring bookings feature
-- [ ] Calendar view integration
-- [ ] Resource availability calendar
-- [ ] Advanced filtering options
-- [ ] Export booking data
-- [ ] Multi-language support
+These are displayed as cards grouped by facility type.
 
-## Contributing
+### 2. Booking system
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+The booking form collects:
+
+- student name
+- resource
+- date
+- start time
+- end time
+- purpose
+
+Booking requests are initially saved with `pending` status.
+
+### 3. Validation
+
+Validation is handled in [src/utils/validation.js](/Users/cil/CascadeProjects/2048/src/utils/validation.js).
+
+It checks:
+
+- required fields
+- valid future date
+- valid start and end time order
+- minimum name length
+- purpose length
+
+### 4. Clash detection
+
+Clash detection is handled in [src/utils/clashDetection.js](/Users/cil/CascadeProjects/2048/src/utils/clashDetection.js).
+
+Two bookings overlap when:
+
+```js
+newStart < existingEnd && newEnd > existingStart
+```
+
+A clash is checked only when:
+
+- the resource is the same
+- the date is the same
+- the existing booking is not rejected
+
+This prevents double booking for the same facility and time range.
+
+### 5. Admin review
+
+Admins can:
+
+- see pending requests
+- approve bookings
+- reject bookings with a reason
+- review all bookings
+- view booking statistics
+
+### 6. Data persistence
+
+The app stores data in browser `localStorage`:
+
+- `campus_booker_bookings`
+- `campus_booker_user_role`
+
+This means refreshes do not remove booking data unless browser storage is cleared.
+
+## Important Viva Points
+
+- This is a frontend-only project, so role switching is for demo purposes only.
+- `localStorage` is used instead of a backend database.
+- Clash detection is based on overlapping time intervals.
+- Booking status supports an approval workflow.
+- React state updates the UI immediately when bookings change.
+- Filtering is done on the client side using array methods.
+
+## Demo Notes
+
+- The project includes demo bookings for quick testing.
+- Demo dates are set into the future so the app works during presentation.
+- You can switch between student and admin using the header button.
+
+## Limitations
+
+- No real authentication
+- No backend API
+- No multi-user synchronization across different browsers/devices
+- Data is limited to the current browser storage
+
+## Future Improvements
+
+- Add login/authentication
+- Add backend and database support
+- Add calendar view
+- Add email notifications
+- Add recurring bookings
+- Add export or report generation
+
+## Repository
+
+GitHub repository:
+
+`https://github.com/Hamza4793/campus-booker`
 
 ## License
 
-This project is for educational purposes only.
-
----
-
-**Happy Coding! 🚀**
+This project is intended for educational use.
